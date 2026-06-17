@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>神奇超市除法大冒險 - 小學數學高階訓練</title>
+    <title>神奇超市除法大冒險</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts for Cute Rounded Typography -->
@@ -76,7 +76,7 @@
         <div class="max-w-4xl mx-auto flex flex-col items-center">
             <!-- Supermarket Icon / Badge -->
             <div class="bg-yellow-300 text-green-900 font-black text-sm px-4 py-1.5 rounded-full uppercase tracking-wider mb-2 animate-bounce shadow">
-                🛒 歡迎來到智慧超級市場！
+                🛒 歡迎來到除法超級市場！
             </div>
             <h1 class="text-3xl md:text-5xl font-black tracking-tight drop-shadow-[0_3px_3px_rgba(0,0,0,0.3)] flex items-center gap-2">
                 🍎 神奇超市除法大冒險 🍩
@@ -259,11 +259,11 @@
 
         <!-- SECTION 3: VERTICAL MAGIC (除法直式魔法陣 & 概念閃卡) -->
         <section id="sec-vertical" class="tab-content hidden">
-            <!-- ⚡ NEW INTERACTIVE FLASHCARDS SECTION ⚡ -->
+            <!-- ⚡ INTERACTIVE FLASHCARDS SECTION WITH CANTONESE TTS ⚡ -->
             <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-[32px] p-6 shadow-xl text-white mb-8 border-4 border-indigo-300">
                 <span class="bg-yellow-300 text-yellow-950 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">觀念大突破</span>
                 <h2 class="text-2xl md:text-3xl font-black mt-2 mb-2 flex items-center gap-2">
-                    💡 除法核心概念閃卡 (點擊翻轉！)
+                    💡 除法核心概念閃卡 (點擊翻轉，按喇叭聽廣東話發音！)
                 </h2>
                 <p class="text-indigo-50 text-sm md:text-base mb-6">
                     在動手算直式之前，快來和超市管理員一起認清這四個除法守護神的名字吧！
@@ -272,85 +272,121 @@
                 <!-- Flashcard Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 perspective-1000">
                     <!-- Card 1: 被除數 -->
-                    <div class="card-container h-48 cursor-pointer" onclick="playPop(); this.classList.toggle('flipped');">
+                    <div class="card-container h-52 cursor-pointer" onclick="handleCardClick(event, this)">
                         <div class="card-inner w-full h-full relative transform-style-3d transition-transform duration-500">
                             <!-- Front -->
                             <div class="absolute w-full h-full bg-white text-blue-900 rounded-2xl p-4 flex flex-col justify-between items-center text-center shadow-md backface-hidden border-2 border-indigo-200">
-                                <span class="text-3xl">📦</span>
+                                <div class="w-full flex justify-between items-center">
+                                    <span class="text-2xl">📦</span>
+                                    <button onclick="speakCantonese(event, '被除數：被平分的總數量')" class="p-1.5 bg-indigo-50 hover:bg-indigo-100 rounded-full text-indigo-600 transition-colors" title="聽廣東話發音">🔊</button>
+                                </div>
                                 <h3 class="font-black text-xl text-indigo-900">被除數</h3>
                                 <p class="text-xs text-indigo-500">被平分的總數量</p>
                                 <span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">🔍 點擊翻看解釋</span>
                             </div>
                             <!-- Back -->
-                            <div class="absolute w-full h-full bg-indigo-50 text-indigo-950 rounded-2xl p-4 flex flex-col justify-center items-center text-center shadow-md backface-hidden rotate-y-180 border-2 border-indigo-400">
-                                <h4 class="font-black text-lg text-indigo-800 mb-1">被除數</h4>
-                                <p class="text-xs md:text-sm leading-relaxed font-bold">
-                                    代表**總共有多少東西**要拿來平分。<br>
-                                    <span class="text-blue-600 block mt-1">例如：超市內所有的 74 個橙。</span>
-                                </p>
+                            <div class="absolute w-full h-full bg-indigo-50 text-indigo-950 rounded-2xl p-4 flex flex-col justify-between items-center text-center shadow-md backface-hidden rotate-y-180 border-2 border-indigo-400">
+                                <div class="w-full flex justify-end">
+                                    <button onclick="speakCantonese(event, '被除數。代表總共有多少東西要拿來平分。例如：超市內所有的七十四個橙。')" class="p-1 bg-indigo-200 hover:bg-indigo-300 rounded-full text-indigo-800 transition-colors" title="聽廣東話發音">🔊</button>
+                                </div>
+                                <div class="my-auto">
+                                    <h4 class="font-black text-lg text-indigo-800 mb-1">被除數</h4>
+                                    <p class="text-xs md:text-sm leading-relaxed font-bold">
+                                        代表**總共有多少東西**要拿來平分。<br>
+                                        <span class="text-blue-600 block mt-1 text-[11px]">例如：超市內所有的 74 個橙。</span>
+                                    </p>
+                                </div>
+                                <span class="text-[9px] text-indigo-400">🔍 點擊翻回正面</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Card 2: 除數 -->
-                    <div class="card-container h-48 cursor-pointer" onclick="playPop(); this.classList.toggle('flipped');">
+                    <div class="card-container h-52 cursor-pointer" onclick="handleCardClick(event, this)">
                         <div class="card-inner w-full h-full relative transform-style-3d transition-transform duration-500">
                             <!-- Front -->
                             <div class="absolute w-full h-full bg-white text-amber-900 rounded-2xl p-4 flex flex-col justify-between items-center text-center shadow-md backface-hidden border-2 border-amber-200">
-                                <span class="text-3xl">🥡</span>
+                                <div class="w-full flex justify-between items-center">
+                                    <span class="text-2xl">🥡</span>
+                                    <button onclick="speakCantonese(event, '除數：每份裝多少，或分幾組')" class="p-1.5 bg-amber-50 hover:bg-amber-100 rounded-full text-amber-600 transition-colors" title="聽廣東話發音">🔊</button>
+                                </div>
                                 <h3 class="font-black text-xl text-amber-700">除數</h3>
                                 <p class="text-xs text-amber-500">每份裝多少 / 分幾組</p>
                                 <span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">🔍 點擊翻看解釋</span>
                             </div>
                             <!-- Back -->
-                            <div class="absolute w-full h-full bg-amber-50 text-amber-950 rounded-2xl p-4 flex flex-col justify-center items-center text-center shadow-md backface-hidden rotate-y-180 border-2 border-amber-400">
-                                <h4 class="font-black text-lg text-amber-800 mb-1">除數</h4>
-                                <p class="text-xs md:text-sm leading-relaxed font-bold">
-                                    代表**每一份要裝多少**，或者**要分給多少人**。<br>
-                                    <span class="text-amber-600 block mt-1">例如：每 5 個橙裝成一袋。</span>
-                                </p>
+                            <div class="absolute w-full h-full bg-amber-50 text-amber-950 rounded-2xl p-4 flex flex-col justify-between items-center text-center shadow-md backface-hidden rotate-y-180 border-2 border-amber-400">
+                                <div class="w-full flex justify-end">
+                                    <button onclick="speakCantonese(event, '除數。代表每一份要裝多少，或者要分給多少人。例如：每五個橙裝成一袋。')" class="p-1 bg-amber-200 hover:bg-amber-300 rounded-full text-amber-800 transition-colors" title="聽廣東話發音">🔊</button>
+                                </div>
+                                <div class="my-auto">
+                                    <h4 class="font-black text-lg text-amber-800 mb-1">除數</h4>
+                                    <p class="text-xs md:text-sm leading-relaxed font-bold">
+                                        代表**每一份要裝多少**，或者**分給多少人**。<br>
+                                        <span class="text-amber-600 block mt-1 text-[11px]">例如：每 5 個橙裝成一袋。</span>
+                                    </p>
+                                </div>
+                                <span class="text-[9px] text-amber-400">🔍 點擊翻回正面</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Card 3: 商數 -->
-                    <div class="card-container h-48 cursor-pointer" onclick="playPop(); this.classList.toggle('flipped');">
+                    <div class="card-container h-52 cursor-pointer" onclick="handleCardClick(event, this)">
                         <div class="card-inner w-full h-full relative transform-style-3d transition-transform duration-500">
                             <!-- Front -->
                             <div class="absolute w-full h-full bg-white text-green-900 rounded-2xl p-4 flex flex-col justify-between items-center text-center shadow-md backface-hidden border-2 border-green-200">
-                                <span class="text-3xl">🛍️</span>
+                                <div class="w-full flex justify-between items-center">
+                                    <span class="text-2xl">🛍️</span>
+                                    <button onclick="speakCantonese(event, '商數：最後分到了多少組')" class="p-1.5 bg-green-50 hover:bg-green-100 rounded-full text-green-600 transition-colors" title="聽廣東話發音">🔊</button>
+                                </div>
                                 <h3 class="font-black text-xl text-green-700">商（商數）</h3>
                                 <p class="text-xs text-green-500">最後分到了多少組</p>
                                 <span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">🔍 點擊翻看解釋</span>
                             </div>
                             <!-- Back -->
-                            <div class="absolute w-full h-full bg-green-50 text-green-950 rounded-2xl p-4 flex flex-col justify-center items-center text-center shadow-md backface-hidden rotate-y-180 border-2 border-green-400">
-                                <h4 class="font-black text-lg text-green-800 mb-1">商數</h4>
-                                <p class="text-xs md:text-sm leading-relaxed font-bold">
-                                    代表**最後成功分好了多少份**。<br>
-                                    <span class="text-green-600 block mt-1">例如：最後成功裝滿了 14 袋。</span>
-                                </p>
+                            <div class="absolute w-full h-full bg-green-50 text-green-950 rounded-2xl p-4 flex flex-col justify-between items-center text-center shadow-md backface-hidden rotate-y-180 border-2 border-green-400">
+                                <div class="w-full flex justify-end">
+                                    <button onclick="speakCantonese(event, '商數。代表最後成功分好了多少份。例如：最後成功裝滿了十四袋。')" class="p-1 bg-green-200 hover:bg-green-300 rounded-full text-green-800 transition-colors" title="聽廣東話發音">🔊</button>
+                                </div>
+                                <div class="my-auto">
+                                    <h4 class="font-black text-lg text-green-800 mb-1">商數</h4>
+                                    <p class="text-xs md:text-sm leading-relaxed font-bold">
+                                        代表**最後成功分好了多少份**。<br>
+                                        <span class="text-green-600 block mt-1 text-[11px]">例如：最後成功裝滿了 14 袋。</span>
+                                    </p>
+                                </div>
+                                <span class="text-[9px] text-green-400">🔍 點擊翻回正面</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Card 4: 餘數 -->
-                    <div class="card-container h-48 cursor-pointer" onclick="playPop(); this.classList.toggle('flipped');">
+                    <div class="card-container h-52 cursor-pointer" onclick="handleCardClick(event, this)">
                         <div class="card-inner w-full h-full relative transform-style-3d transition-transform duration-500">
                             <!-- Front -->
                             <div class="absolute w-full h-full bg-white text-red-950 rounded-2xl p-4 flex flex-col justify-between items-center text-center shadow-md backface-hidden border-2 border-red-200">
-                                <span class="text-3xl">🍂</span>
+                                <div class="w-full flex justify-between items-center">
+                                    <span class="text-2xl">🍂</span>
+                                    <button onclick="speakCantonese(event, '餘數：剩下不夠分的小尾巴')" class="p-1.5 bg-red-50 hover:bg-red-100 rounded-full text-red-600 transition-colors" title="聽廣東話發音">🔊</button>
+                                </div>
                                 <h3 class="font-black text-xl text-red-600">餘數</h3>
                                 <p class="text-xs text-red-500">剩下不夠分的小尾巴</p>
                                 <span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">🔍 點擊翻看解釋</span>
                             </div>
                             <!-- Back -->
-                            <div class="absolute w-full h-full bg-red-50 text-red-950 rounded-2xl p-4 flex flex-col justify-center items-center text-center shadow-md backface-hidden rotate-y-180 border-2 border-red-400">
-                                <h4 class="font-black text-lg text-red-800 mb-1">餘數</h4>
-                                <p class="text-xs md:text-sm leading-relaxed font-bold">
-                                    代表**分完後，剩下不夠再裝滿一袋的數量**。它一定要比除數小！<br>
-                                    <span class="text-red-600 block mt-1">例如：最後剩下不夠裝袋的 4 個橙。</span>
-                                </p>
+                            <div class="absolute w-full h-full bg-red-50 text-red-950 rounded-2xl p-4 flex flex-col justify-between items-center text-center shadow-md backface-hidden rotate-y-180 border-2 border-red-400">
+                                <div class="w-full flex justify-end">
+                                    <button onclick="speakCantonese(event, '餘數。代表分完後，剩下不夠再裝滿一袋的數量。它一定要比除數小。例如：最後剩下不夠裝袋的四個橙。')" class="p-1 bg-red-200 hover:bg-red-300 rounded-full text-red-800 transition-colors" title="聽廣東話發音">🔊</button>
+                                </div>
+                                <div class="my-auto">
+                                    <h4 class="font-black text-lg text-red-800 mb-1">餘數</h4>
+                                    <p class="text-xs md:text-sm leading-relaxed font-bold">
+                                        代表**分完後，剩下不夠再裝滿一袋的數量**。它一定要比除數小！<br>
+                                        <span class="text-red-600 block mt-1 text-[11px]">例如：最後剩下不夠裝袋的 4 個橙。</span>
+                                    </p>
+                                </div>
+                                <span class="text-[9px] text-red-400">🔍 點擊翻回正面</span>
                             </div>
                         </div>
                     </div>
@@ -556,7 +592,7 @@
             </div>
         </section>
 
-        <!-- SECTION 5: QUIZ (小學堂除法綜合練習) -->
+        <!-- SECTION 5: QUIZ (小學堂除法綜合練習 - 共8題) -->
         <section id="sec-quiz" class="tab-content hidden">
             <div class="bg-white rounded-[32px] p-6 shadow-xl border-4 border-emerald-200">
                 <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
@@ -564,11 +600,11 @@
                         📝 除法綜合應用小學堂
                     </h2>
                     <span class="text-sm font-bold text-emerald-800 bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-200">
-                        答對數：<span id="quiz-correct-cnt" class="text-emerald-600">0</span> / 6
+                        答對數：<span id="quiz-correct-cnt" class="text-emerald-600">0</span> / 8
                     </span>
                 </div>
                 <p class="text-gray-600 mb-6 text-sm md:text-base">
-                    這裡有 6 題為你精心準備的高階常規與應用題目，涵蓋<b>基本除法、直式概念、兩位數除法以及生活應用題</b>。試試看你能答對多少題！
+                    這裡有 <b>8 題</b> 為你精心準備的高階常規與應用題目，涵蓋<b>基本除法、直式概念、兩位數除法以及生活應用題</b>。試試看你能答對多少題！
                 </p>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -656,6 +692,39 @@
                             <input type="number" id="quiz-ans-6" class="math-input w-24 h-11" placeholder="盒數">
                         </div>
                     </div>
+
+                    <!-- Q7: NEW ADDED QUESTION -->
+                    <div class="bg-emerald-50 p-5 rounded-2xl border-2 border-emerald-100 flex flex-col justify-between">
+                        <div>
+                            <span class="bg-emerald-200 text-emerald-800 text-xs font-black px-2.5 py-1 rounded-full">第 7 題：應用分析題 (潤手霜促銷)</span>
+                            <p class="font-black text-gray-700 mt-2 text-sm leading-relaxed">
+                                媽媽買了一套半打裝（即 6 枝）潤手霜共付了 $270 元。
+                            </p>
+                            <p class="font-black text-lg text-emerald-950 mt-1 leading-relaxed">
+                                平均每枝潤手霜售多少元？
+                            </p>
+                        </div>
+                        <div class="mt-4">
+                            <input type="number" id="quiz-ans-7" class="math-input w-24 h-11" placeholder="售價">
+                        </div>
+                    </div>
+
+                    <!-- Q8: NEW ADDED QUESTION -->
+                    <div class="bg-emerald-50 p-5 rounded-2xl border-2 border-emerald-100 flex flex-col justify-between">
+                        <div>
+                            <span class="bg-emerald-200 text-emerald-800 text-xs font-black px-2.5 py-1 rounded-full">第 8 題：高階應用題 (儲蓄計劃)</span>
+                            <p class="font-black text-gray-700 mt-2 text-sm leading-relaxed">
+                                晉廷想買一架玩具機械人。如果他改為<b>每天儲蓄 $8 元</b>。
+                            </p>
+                            <p class="font-black text-lg text-emerald-950 mt-1 leading-relaxed">
+                                已知他原本每天儲蓄 $9 元，需在 7 月和 8 月這兩個月（共 62 天）剛好儲夠錢購買。改為儲 $8 元後，他最少要儲蓄多少天，才足夠買這機械人？
+                            </p>
+                            <p class="text-[10px] text-amber-600 font-bold mt-1">💡 小貼士：先算出機械人的售價（9 × 62 = 558 元），再用除法算算看，記得儲不滿一天也要算一天喔！</p>
+                        </div>
+                        <div class="mt-4">
+                            <input type="number" id="quiz-ans-8" class="math-input w-24 h-11" placeholder="天數">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Feedback and Submit buttons -->
@@ -725,7 +794,7 @@
                                 <span class="text-xl">📝</span>
                                 <span class="font-bold">綜合小學堂答對題數：</span>
                             </div>
-                            <span id="chk-quiz-status" class="font-black text-emerald-600">0 / 6 題</span>
+                            <span id="chk-quiz-status" class="font-black text-emerald-600">0 / 8 題</span>
                         </div>
                     </div>
 
@@ -755,7 +824,7 @@
 
     <!-- FOOTER LICENSE -->
     <footer class="max-w-4xl mx-auto mt-12 text-center text-xs text-gray-400 font-medium">
-        i-Math 數學概念高階訓練 3上 參考教材設計 | © 教育網絡有限公司
+        🛒 超級市場除法大冒險互動學習系統
     </footer>
 
     <!-- INTERACTIVE SCRIPTS -->
@@ -846,6 +915,55 @@
             }
         }
 
+        // CANTONESE TEXT-TO-SPEECH (TTS) SYSTEM
+        function speakCantonese(event, text) {
+            // Prevent triggering card flip on click
+            if (event) {
+                event.stopPropagation();
+            }
+
+            if (!('speechSynthesis' in window)) {
+                alert("瀏覽器不支援發音功能喔！");
+                return;
+            }
+
+            // Stop any ongoing speech
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-HK'; // Cantonese localization code
+            utterance.rate = 0.9;      // Slightly slower for children's clarity
+            utterance.pitch = 1.1;     // Slightly higher pitch for friendly tone
+
+            // Attempt to fetch specific local voice if available
+            const voices = window.speechSynthesis.getVoices();
+            const hkVoice = voices.find(voice => voice.lang.includes('ZH-HK') || voice.lang.includes('zh-HK') || voice.name.includes('Hong Kong') || voice.name.includes('Sinji') || voice.name.includes('Danny'));
+            if (hkVoice) {
+                utterance.voice = hkVoice;
+            }
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Prevent Flipping cards when hitting TTS button inside card
+        function handleCardClick(event, cardEl) {
+            // Check if clicked element or parent has speaker icon/button
+            if (event.target.closest('button')) {
+                return; // TTS handled separately
+            }
+            playPop();
+            cardEl.classList.toggle('flipped');
+        }
+
+        // Ensure voices are loaded for SpeechSynthesis
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = function() {
+                // Pre-fetch voices
+                window.speechSynthesis.getVoices();
+            };
+        }
+
+
         // STATE & PROGRESS MANAGEMENT
         let state = {
             progress: {
@@ -908,12 +1026,9 @@
             // Reset fields
             document.getElementById('rel-ans-1').value = '';
             document.getElementById('rel-ans-2').value = '';
-            document.getElementById('quiz-ans-1').value = '';
-            document.getElementById('quiz-ans-2').value = '';
-            document.getElementById('quiz-ans-3').value = '';
-            document.getElementById('quiz-ans-4').value = '';
-            document.getElementById('quiz-ans-5').value = '';
-            document.getElementById('quiz-ans-6').value = '';
+            for (let i = 1; i <= 8; i++) {
+                document.getElementById(`quiz-ans-${i}`).value = '';
+            }
             document.getElementById('quiz-global-feedback').innerText = '';
             document.getElementById('quiz-correct-cnt').innerText = '0';
             state.verticalStep = 1;
@@ -1221,21 +1336,23 @@
         }
 
 
-        // SECTION 5: COMPREHENSIVE QUIZ
+        // SECTION 5: COMPREHENSIVE QUIZ (8 QUESTIONS)
         const QUIZ_CORRECT_ANSWERS = {
             ans1: 8,   // 96 / 4 = 24, 24 / 3 = 8
             ans2: 20,  // 83 / 4 = 20 remainder 3, Quotient is 20
             ans3: 3,   // Remainder is 3
             ans4: 26,  // 80 / 3 = 26 remainder 2
             ans5: 2,   // Remainder is 2
-            ans6: 12   // 90 / 8 = 11 remainder 2 -> requires 12 boxes (High cognitive)
+            ans6: 12,  // 90 / 8 = 11 remainder 2 -> requires 12 boxes (High cognitive)
+            ans7: 45,  // 270 / 6 = 45 (New Question)
+            ans8: 70   // 558 / 8 = 69 remainder 6 -> requires 70 days (New Question)
         };
 
         function checkAllQuizAnswers() {
             let correctCount = 0;
 
             // Check each answer
-            for (let i = 1; i <= 6; i++) {
+            for (let i = 1; i <= 8; i++) {
                 const userAns = parseInt(document.getElementById(`quiz-ans-${i}`).value);
                 const correctAns = QUIZ_CORRECT_ANSWERS[`ans${i}`];
                 const inputEl = document.getElementById(`quiz-ans-${i}`);
@@ -1256,9 +1373,9 @@
             saveProgress();
 
             const globalFeedback = document.getElementById('quiz-global-feedback');
-            if (correctCount === 6) {
+            if (correctCount === 8) {
                 playDing();
-                globalFeedback.innerText = "🏆 太震撼了！你得到了滿分 6/6！是個除法小天才！";
+                globalFeedback.innerText = "🏆 太震撼了！你得到了滿分 8/8！是個除法小天才！";
                 globalFeedback.className = "text-green-600 font-black text-xl";
             } else {
                 playBuzz();
@@ -1301,8 +1418,8 @@
             document.getElementById('chk-game-status').innerText = `${state.progress.gameHighScore} 分`;
             document.getElementById('chk-game-status').className = "font-black text-pink-600";
 
-            document.getElementById('chk-quiz-status').innerText = `${state.progress.quizScore} / 6 題`;
-            document.getElementById('chk-quiz-status').className = state.progress.quizScore === 6 ? "font-black text-green-600" : "font-black text-amber-600";
+            document.getElementById('chk-quiz-status').innerText = `${state.progress.quizScore} / 8 題`;
+            document.getElementById('chk-quiz-status').className = state.progress.quizScore === 8 ? "font-black text-green-600" : "font-black text-amber-600";
         }
 
         function sendParentWhatsApp() {
@@ -1315,9 +1432,9 @@
             msg += `⚖️ 理解乘除互逆關係：${state.progress.relationDone ? "✅ 已通過挑戰" : "⚠️ 需要練習"}\n`;
             msg += `📐 直式除法步驟掌握：${state.progress.verticalDone ? "✅ 已全部掌握" : "⚠️ 還在看步驟"}\n`;
             msg += `🍓 超市打包遊戲最高分：🔥 ${state.progress.gameHighScore} 分\n`;
-            msg += `📝 除法小學堂測試答對：🌟 ${state.progress.quizScore} / 6 題\n\n`;
+            msg += `📝 除法小學堂測試答對：🌟 ${state.progress.quizScore} / 8 題\n\n`;
             
-            if (state.progress.quizScore === 6) {
+            if (state.progress.quizScore === 8) {
                 msg += `🏆 我現在很懂除法直式和有餘數的除法啦！誇獎我一下吧！❤️`;
             } else {
                 msg += `💪 我會繼續加油，努力拿到滿分！`;
