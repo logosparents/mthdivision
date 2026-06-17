@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神奇超市除法大冒險 - 小學數學高階訓練</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Cute Rounded Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Chalkboard+SE&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', 'Chalkboard SE', sans-serif;
+            background-color: #f0fdf4; /* Light pastel green */
+        }
+        .bubble-shadow {
+            box-shadow: 0 8px 0px #1e3a1e;
+        }
+        .bubble-btn-green {
+            box-shadow: 0 6px 0px #15803d;
+        }
+        .bubble-btn-green:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0px #15803d;
+        }
+        .bubble-btn-orange {
+            box-shadow: 0 6px 0px #c2410c;
+        }
+        .bubble-btn-orange:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0px #c2410c;
+        }
+        .card-bounce {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card-bounce:hover {
+            transform: translateY(-4px) scale(1.02);
+        }
+        /* Custom styled input */
+        .math-input {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            border: 3px solid #bbf7d0;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .math-input:focus {
+            border-color: #22c55e;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+        }
+
+        /* 3D Flashcard Flip CSS */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+        .card-container:hover .card-inner, .card-container.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-12 select-none">
+
+    <!-- TOP HEADER & BANNER -->
+    <header class="bg-gradient-to-b from-green-400 to-emerald-500 text-white pb-6 pt-4 px-4 rounded-b-[40px] shadow-lg text-center relative">
+        <div class="max-w-4xl mx-auto flex flex-col items-center">
+            <!-- Supermarket Icon / Badge -->
+            <div class="bg-yellow-300 text-green-900 font-black text-sm px-4 py-1.5 rounded-full uppercase tracking-wider mb-2 animate-bounce shadow">
+                🛒 歡迎來到智慧超級市場！
+            </div>
+            <h1 class="text-3xl md:text-5xl font-black tracking-tight drop-shadow-[0_3px_3px_rgba(0,0,0,0.3)] flex items-center gap-2">
+                🍎 神奇超市除法大冒險 🍩
+            </h1>
+            <p class="text-green-50 text-base md:text-lg mt-2 font-medium">
+                一邊逛超市，一邊玩遊戲，輕輕鬆鬆學會除法直式與餘數！
+            </p>
+
+            <!-- Links to Times Table app and reset -->
+            <div class="mt-4 flex flex-wrap justify-center gap-3">
+                <a href="https://logosparents.github.io/timestable/" target="_blank" class="bg-yellow-400 hover:bg-yellow-300 text-amber-950 font-black py-2 px-5 rounded-2xl shadow transition-transform hover:scale-105 flex items-center gap-2 text-sm md:text-base border-2 border-amber-500">
+                    🎵 乘法九因歌傳送門 (先複習乘法吧！)
+                </a>
+                <button onclick="resetAllProgress()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-2xl text-xs md:text-sm shadow">
+                    🔄 重設所有進度
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN INTERACTIVE LAYOUT -->
+    <main class="max-w-5xl mx-auto px-4 mt-6">
+        
+        <!-- MAIN NAVIGATION TABS (Supermarket Aisles) -->
+        <nav class="grid grid-cols-3 md:grid-cols-6 gap-2 mb-8">
+            <button onclick="switchTab('class')" id="tab-class" class="nav-tab bg-emerald-600 text-white font-black py-3 px-2 rounded-2xl text-center shadow-md transform hover:scale-105 transition-all flex flex-col items-center justify-center gap-1">
+                <span class="text-xl">📺</span>
+                <span class="text-xs md:text-sm">影片教室</span>
+            </button>
+            <button onclick="switchTab('relation')" id="tab-relation" class="nav-tab bg-white text-emerald-800 font-bold py-3 px-2 rounded-2xl text-center shadow-md hover:bg-emerald-50 transform hover:scale-105 transition-all flex flex-col items-center justify-center gap-1">
+                <span class="text-xl">⚖️</span>
+                <span class="text-xs md:text-sm">乘除一家親</span>
+            </button>
+            <button onclick="switchTab('vertical')" id="tab-vertical" class="nav-tab bg-white text-emerald-800 font-bold py-3 px-2 rounded-2xl text-center shadow-md hover:bg-emerald-50 transform hover:scale-105 transition-all flex flex-col items-center justify-center gap-1">
+                <span class="text-xl">📐</span>
+                <span class="text-xs md:text-sm">直式魔法陣</span>
+            </button>
+            <button onclick="switchTab('game')" id="tab-game" class="nav-tab bg-white text-emerald-800 font-bold py-3 px-2 rounded-2xl text-center shadow-md hover:bg-emerald-50 transform hover:scale-105 transition-all flex flex-col items-center justify-center gap-1">
+                <span class="text-xl">🍓</span>
+                <span class="text-xs md:text-sm">打包大作戰</span>
+            </button>
+            <button onclick="switchTab('quiz')" id="tab-quiz" class="nav-tab bg-white text-emerald-800 font-bold py-3 px-2 rounded-2xl text-center shadow-md hover:bg-emerald-50 transform hover:scale-105 transition-all flex flex-col items-center justify-center gap-1">
+                <span class="text-xl">📝</span>
+                <span class="text-xs md:text-sm">小學堂練習</span>
+            </button>
+            <button onclick="switchTab('report')" id="tab-report" class="nav-tab bg-white text-emerald-800 font-bold py-3 px-2 rounded-2xl text-center shadow-md hover:bg-emerald-50 transform hover:scale-105 transition-all flex flex-col items-center justify-center gap-1">
+                <span class="text-xl">📊</span>
+                <span class="text-xs md:text-sm">學習成績單</span>
+            </button>
+        </nav>
+
+        <!-- SECTION 1: VIDEO CLASSROOM (影片課堂) -->
+        <section id="sec-class" class="tab-content block">
+            <div class="bg-white rounded-[32px] p-6 shadow-xl border-4 border-green-200">
+                <h2 class="text-2xl md:text-3xl font-black text-green-900 mb-4 flex items-center gap-2">
+                    📺 電視播放區：有趣的除法課堂
+                </h2>
+                <p class="text-gray-600 mb-6 text-sm md:text-base">
+                    小朋友，先看一看這兩段神奇的除法動畫，看完再挑戰超市任務，會變得非常聰明喔！
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Video 1 -->
+                    <div class="bg-green-50 p-4 rounded-2xl border-2 border-green-100 flex flex-col">
+                        <span class="bg-green-600 text-white text-xs font-black px-3 py-1 rounded-full self-start mb-2">動畫 1</span>
+                        <h3 class="font-bold text-lg text-green-800 mb-3">基本除法概念 🌟</h3>
+                        <div class="aspect-video w-full rounded-xl overflow-hidden shadow-inner bg-black">
+                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/TK3eNGJneUY" title="基本除法" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">點擊影片可以邊看邊學「除法」是怎麼把東西平分的！</p>
+                    </div>
+                    <!-- Video 2 -->
+                    <div class="bg-green-50 p-4 rounded-2xl border-2 border-green-100 flex flex-col">
+                        <span class="bg-emerald-600 text-white text-xs font-black px-3 py-1 rounded-full self-start mb-2">動畫 2</span>
+                        <h3 class="font-bold text-lg text-green-800 mb-3">除法一 (兩位數除一位數) 🚀</h3>
+                        <div class="aspect-video w-full rounded-xl overflow-hidden shadow-inner bg-black">
+                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/XmwWcsYRimk" title="除法一" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">學習如何一步一步做算術與理解除法的魔力！</p>
+                    </div>
+                </div>
+                <!-- Interactive Done Button -->
+                <div class="mt-8 text-center">
+                    <button onclick="markTaskDone('video'); playDing();" class="bubble-btn-green bg-green-500 hover:bg-green-600 text-white font-black text-xl py-3.5 px-8 rounded-2xl shadow-lg transition-transform hover:scale-105">
+                        ✅ 我已經看完影片了，出發去超市！
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: RELATIONSHIP (乘除關係) -->
+        <section id="sec-relation" class="tab-content hidden">
+            <div class="bg-white rounded-[32px] p-6 shadow-xl border-4 border-yellow-200">
+                <h2 class="text-2xl md:text-3xl font-black text-amber-900 mb-2 flex items-center gap-2">
+                    ⚖️ 乘法與除法是一家親！
+                </h2>
+                <p class="text-gray-600 mb-6 text-sm md:text-base">
+                    你知道嗎？除法就是<strong>「乘法的相反」</strong>！如果我知道 3 × 4 = 12，我就一定知道 12 ÷ 3 = 4。
+                </p>
+
+                <!-- Interactive Shelf Sorting -->
+                <div class="bg-amber-50 p-6 rounded-2xl border-2 border-amber-200">
+                    <h3 class="font-bold text-lg text-amber-800 mb-4 text-center">🛒 超市貨架陳列：擺放蘋果🍎</h3>
+                    
+                    <div class="flex flex-col items-center">
+                        <!-- Dynamic Grid Controls -->
+                        <div class="flex items-center gap-4 mb-6 bg-white p-3 rounded-xl shadow-sm border border-amber-100">
+                            <div class="flex flex-col items-center">
+                                <span class="text-xs text-gray-400">每行有幾個蘋果 (乘數)</span>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <button onclick="changeRelationGrid(-1, 0)" class="w-8 h-8 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-full font-black text-lg flex items-center justify-center">-</button>
+                                    <span id="rel-cols" class="font-black text-xl text-amber-900 w-6 text-center">4</span>
+                                    <button onclick="changeRelationGrid(1, 0)" class="w-8 h-8 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-full font-black text-lg flex items-center justify-center">+</button>
+                                </div>
+                            </div>
+                            <div class="text-xl text-amber-300 font-bold">✕</div>
+                            <div class="flex flex-col items-center">
+                                <span class="text-xs text-gray-400">總共有多少行 (被乘數)</span>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <button onclick="changeRelationGrid(0, -1)" class="w-8 h-8 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-full font-black text-lg flex items-center justify-center">-</button>
+                                    <span id="rel-rows" class="font-black text-xl text-amber-900 w-6 text-center">3</span>
+                                    <button onclick="changeRelationGrid(0, 1)" class="w-8 h-8 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-full font-black text-lg flex items-center justify-center">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shelf Area -->
+                        <div class="bg-amber-950 p-4 rounded-xl border-t-8 border-yellow-600 shadow-inner w-full max-w-md min-h-[160px] flex flex-col justify-center gap-3">
+                            <div id="shelf-display" class="grid gap-2 justify-center mx-auto">
+                                <!-- Generated Dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Math Formula Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 w-full max-w-xl">
+                            <!-- Multiplication Explanation -->
+                            <div class="bg-green-100 p-4 rounded-xl border border-green-200 text-center">
+                                <p class="text-xs text-green-700 font-black">🌟 乘法排排看 (整齊排列)</p>
+                                <p id="formula-mult" class="text-2xl font-black text-green-900 mt-2">3 × 4 = 12</p>
+                                <p class="text-xs text-green-600 mt-1">意思是：3 行，每行有 4 個蘋果，合起來是 12 個。</p>
+                            </div>
+                            <!-- Division Explanation -->
+                            <div class="bg-blue-100 p-4 rounded-xl border border-blue-200 text-center">
+                                <p class="text-xs text-blue-700 font-black">🌟 除法平分看 (裝箱打包)</p>
+                                <p id="formula-div" class="text-2xl font-black text-blue-900 mt-2">12 ÷ 3 = 4</p>
+                                <p class="text-xs text-blue-600 mt-1">意思是：12 個蘋果，分成 3 行，每行平分到 4 個。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simple Quiz in-site -->
+                <div class="mt-8 bg-yellow-50 p-6 rounded-2xl border-2 border-yellow-200">
+                    <h3 class="font-black text-lg text-amber-900 mb-4">✍️ 乘除反向思考小挑戰</h3>
+                    <div class="space-y-4">
+                        <div class="flex flex-wrap items-center gap-2 text-lg font-bold text-amber-950">
+                            <span>若我知道</span>
+                            <span class="bg-white px-3 py-1 rounded-lg border">5 × 7 = 35</span>
+                            <span>，那麼我立刻就知道</span>
+                            <span class="bg-white px-3 py-1 rounded-lg border">35 ÷ 5 = </span>
+                            <input type="number" id="rel-ans-1" class="math-input w-16 h-10 text-amber-950" placeholder="?">
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 text-lg font-bold text-amber-950">
+                            <span>若我知道</span>
+                            <span class="bg-white px-3 py-1 rounded-lg border">8 × 9 = 72</span>
+                            <span>，那麼我立刻就知道</span>
+                            <span class="bg-white px-3 py-1 rounded-lg border">72 ÷ </span>
+                            <input type="number" id="rel-ans-2" class="math-input w-16 h-10 text-amber-950" placeholder="?">
+                            <span> = 8</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex gap-2">
+                        <button onclick="checkRelationAnswers()" class="bubble-btn-orange bg-orange-500 hover:bg-orange-600 text-white font-black py-2.5 px-6 rounded-xl shadow-md">
+                            🔍 檢查我的答案
+                        </button>
+                        <span id="rel-feedback" class="text-lg font-black ml-4 flex items-center"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: VERTICAL MAGIC (除法直式魔法陣 & 概念閃卡) -->
+        <section id="sec-vertical" class="tab-content hidden">
+            <!-- ⚡ NEW INTERACTIVE FLASHCARDS SECTION ⚡ -->
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-[32px] p-6 shadow-xl text-white mb-8 border-4 border-indigo-300">
+                <span class="bg-yellow-300 text-yellow-950 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">觀念大突破</span>
+                <h2 class="text-2xl md:text-3xl font-black mt-2 mb-2 flex items-center gap-2">
+                    💡 除法核心概念閃卡 (點擊翻轉！)
+                </h2>
+                <p class="text-indigo-50 text-sm md:text-base mb-6">
+                    在動手算直式之前，快來和超市管理員一起認清這四個除法守護神的名字吧！
+                </p>
+
+                <!-- Flashcard Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 perspective-1000">
+                    <!-- Card 1: 被除數 -->
+                    <div class="card-container h-48 cursor-pointer" onclick="playPop(); this.classList.toggle('flipped');">
+                        <div class="card-inner w-full h-full relative transform-style-3d transition-transform duration-500">
+                            <!-- Front -->
+                            <div class="absolute w-full h-full bg-white text-blue-900 rounded-2xl p-4 flex flex-col justify-between items-center text-center shadow-md backface-hidden border-2 border-indigo-200">
+                                <span class="text-3xl">📦</span>
+                                <h3 class="font-black text-xl text-indigo-900">被除數</h3>
+                                <p class="text-xs text-indigo-500">被平分的總數量</p>
+                                <span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">🔍 點擊翻看解釋</span>
+                            </div>
+                            <!-- Back -->
+                            <div class="absolute w-full h-full bg-indigo-50 text-indigo-950 rounded-2xl p-4 flex flex-col justify-center items-center text-center shadow-md backface-hidden rotate-y-180 border-2 border-indigo-400">
+                                <h4 class="font-black text-lg text-indigo-800 mb-1">被除數</h4>
+                                <p class="text-xs md:text-sm leading-relaxed font-bold">
+                                    代表**總共有多少東西**要拿來平分。<br>
+                                    <span class="text-blue-600 block mt-1">例如：超市內所有的 74 個橙。</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: 除數 -->
+                    <div class="card-container h-48 cursor-pointer" onclick="playPop(); this.classList.toggle('flipped');">
+                        <div class="card-inner w-full h-full relative transform-style-3d transition-transform duration-500">
+                            <!-- Front -->
+                            <div class="absolute w-full h-full bg-white text-amber-900 rounded-2xl p-4 flex flex-col justify-between items-center text-center shadow-md backface-hidden border-2 border-amber-200">
+                                <span class="text-3xl">🥡</span>
+                                <h3 class="font-black text-xl text-amber-700">除數</h3>
+                                <p class="text-xs text-amber-500">每份裝多少 / 分幾組</p>
+                                <span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">🔍 點擊翻看解釋</span>
+                            </div>
+                            <!-- Back -->
+                            <div class="absolute w-full h-full bg-amber-50 text-amber-950 rounded-2xl p-4 flex flex-col justify-center items-center text-center shadow-md backface-hidden rotate-y-180 border-2 border-amber-400">
+                                <h4 class="font-black text-lg text-amber-800 mb-1">除數</h4>
+                                <p class="text-xs md:text-sm leading-relaxed font-bold">
+                                    代表**每一份要裝多少**，或者**要分給多少人**。<br>
+                                    <span class="text-amber-600 block mt-1">例如：每 5 個橙裝成一袋。</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: 商數 -->
+                    <div class="card-container h-48 cursor-pointer" onclick="playPop(); this.classList.toggle('flipped');">
+                        <div class="card-inner w-full h-full relative transform-style-3d transition-transform duration-500">
+                            <!-- Front -->
+                            <div class="absolute w-full h-full bg-white text-green-900 rounded-2xl p-4 flex flex-col justify-between items-center text-center shadow-md backface-hidden border-2 border-green-200">
+                                <span class="text-3xl">🛍️</span>
+                                <h3 class="font-black text-xl text-green-700">商（商數）</h3>
+                                <p class="text-xs text-green-500">最後分到了多少組</p>
+                                <span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">🔍 點擊翻看解釋</span>
+                            </div>
+                            <!-- Back -->
+                            <div class="absolute w-full h-full bg-green-50 text-green-950 rounded-2xl p-4 flex flex-col justify-center items-center text-center shadow-md backface-hidden rotate-y-180 border-2 border-green-400">
+                                <h4 class="font-black text-lg text-green-800 mb-1">商數</h4>
+                                <p class="text-xs md:text-sm leading-relaxed font-bold">
+                                    代表**最後成功分好了多少份**。<br>
+                                    <span class="text-green-600 block mt-1">例如：最後成功裝滿了 14 袋。</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: 餘數 -->
+                    <div class="card-container h-48 cursor-pointer" onclick="playPop(); this.classList.toggle('flipped');">
+                        <div class="card-inner w-full h-full relative transform-style-3d transition-transform duration-500">
+                            <!-- Front -->
+                            <div class="absolute w-full h-full bg-white text-red-950 rounded-2xl p-4 flex flex-col justify-between items-center text-center shadow-md backface-hidden border-2 border-red-200">
+                                <span class="text-3xl">🍂</span>
+                                <h3 class="font-black text-xl text-red-600">餘數</h3>
+                                <p class="text-xs text-red-500">剩下不夠分的小尾巴</p>
+                                <span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">🔍 點擊翻看解釋</span>
+                            </div>
+                            <!-- Back -->
+                            <div class="absolute w-full h-full bg-red-50 text-red-950 rounded-2xl p-4 flex flex-col justify-center items-center text-center shadow-md backface-hidden rotate-y-180 border-2 border-red-400">
+                                <h4 class="font-black text-lg text-red-800 mb-1">餘數</h4>
+                                <p class="text-xs md:text-sm leading-relaxed font-bold">
+                                    代表**分完後，剩下不夠再裝滿一袋的數量**。它一定要比除數小！<br>
+                                    <span class="text-red-600 block mt-1">例如：最後剩下不夠裝袋的 4 個橙。</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Long Division Step-by-Step Visualization -->
+            <div class="bg-white rounded-[32px] p-6 shadow-xl border-4 border-blue-200">
+                <h2 class="text-2xl md:text-3xl font-black text-blue-900 mb-2 flex items-center gap-2">
+                    📐 除法直式（豎式）大解析！
+                </h2>
+                <p class="text-gray-600 mb-6 text-sm md:text-base">
+                    初小學生最怕的直式，其實是一個有趣的<strong>「分批減法城堡」</strong>。讓我們一步一步來拆解它！
+                </p>
+
+                <!-- Step-by-step Interactive Visualizer -->
+                <div class="bg-blue-50 p-6 rounded-2xl border-2 border-blue-200 grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <!-- Left: Control panel & instructions -->
+                    <div class="md:col-span-7 flex flex-col justify-between">
+                        <div>
+                            <span class="bg-blue-600 text-white text-xs font-black px-3 py-1 rounded-full">動態教學</span>
+                            <h3 class="font-black text-xl text-blue-900 mt-2">算式範例：74 ÷ 5 (有餘數)</h3>
+                            <p class="text-gray-600 text-sm mt-1">「超市收到 74 個橙，每 5 個裝成一袋，能裝多少袋？還剩幾個？」</p>
+                            
+                            <!-- Steps Explanation -->
+                            <div id="vertical-step-text" class="mt-6 bg-white p-4 rounded-xl shadow-inner border border-blue-100 min-h-[140px] text-gray-700 text-base font-medium space-y-2">
+                                <!-- Filled by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Step controls -->
+                        <div class="mt-6 flex gap-3">
+                            <button onclick="changeVerticalStep(-1)" id="btn-v-prev" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2.5 px-5 rounded-xl text-sm shadow">
+                                ◀ 上一步
+                            </button>
+                            <button onclick="changeVerticalStep(1)" id="btn-v-next" class="bg-blue-600 hover:bg-blue-700 text-white font-black py-2.5 px-6 rounded-xl text-sm shadow flex-1">
+                                下一步 ▶
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Vertical Box Display -->
+                    <div class="md:col-span-5 bg-white p-6 rounded-2xl border-2 border-blue-100 shadow-sm flex flex-col items-center justify-center relative min-h-[300px]">
+                        
+                        <!-- Visual Overlay Labels -->
+                        <div class="text-center font-black text-lg mb-6 text-indigo-900 bg-indigo-50 border border-indigo-200 px-3 py-1 rounded-xl">
+                            當前步驟: <span id="v-step-num" class="text-indigo-600">1</span>/4
+                        </div>
+
+                        <!-- Math vertical layout wrapper -->
+                        <div class="relative font-mono text-3xl leading-none text-gray-800 select-text" style="width: 200px; height: 260px;">
+                            <!-- Quotient (商) -->
+                            <!-- Tens place -->
+                            <div id="v-q-tens" class="absolute top-2 left-[105px] font-black text-gray-300 transition-all duration-300">1</div>
+                            <!-- Ones place -->
+                            <div id="v-q-ones" class="absolute top-2 left-[145px] font-black text-gray-300 transition-all duration-300">4</div>
+
+                            <!-- Horizontal Line under Quotient -->
+                            <div class="absolute top-[42px] left-[60px] right-0 h-1 bg-gray-800"></div>
+
+                            <!-- Divisor (除數) -->
+                            <div id="v-divisor" class="absolute top-[55px] left-4 font-black text-amber-600">5</div>
+
+                            <!-- Curved division boundary -->
+                            <div class="absolute top-[42px] left-[65px] w-2 h-12 border-l-4 border-gray-800 rounded-l-full"></div>
+
+                            <!-- Dividend (被除數) -->
+                            <!-- Tens place -->
+                            <div id="v-d-tens" class="absolute top-[55px] left-[105px] font-black text-blue-900">7</div>
+                            <!-- Ones place -->
+                            <div id="v-d-ones" class="absolute top-[55px] left-[145px] font-black text-blue-900 font-bold">4</div>
+
+                            <!-- Row 1: First subtraction (除數 x 商的十位) -->
+                            <div id="v-sub1-tens" class="absolute top-[105px] left-[105px] font-black text-gray-300 transition-all duration-300">5</div>
+                            <div class="absolute top-[142px] left-[90px] right-0 h-0.5 bg-gray-500"></div>
+
+                            <!-- Row 2: Remaining of tens & bring down ones -->
+                            <div id="v-rem1-tens" class="absolute top-[155px] left-[105px] font-black text-gray-300 transition-all duration-300">2</div>
+                            <div id="v-bring-ones" class="absolute top-[155px] left-[145px] font-black text-gray-300 transition-all duration-300">4</div>
+
+                            <!-- Row 3: Second subtraction (除數 x 商的個位) -->
+                            <div id="v-sub2-tens" class="absolute top-[205px] left-[105px] font-black text-gray-300 transition-all duration-300">2</div>
+                            <div id="v-sub2-ones" class="absolute top-[205px] left-[145px] font-black text-gray-300 transition-all duration-300">0</div>
+                            <div class="absolute top-[242px] left-[90px] right-0 h-0.5 bg-gray-500"></div>
+
+                            <!-- Row 4: Remainder (餘數) -->
+                            <div id="v-final-rem" class="absolute top-[252px] left-[145px] font-black text-gray-300 transition-all duration-300">4</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Exercise on Long Division structure -->
+                <div class="mt-8 bg-blue-50 p-6 rounded-2xl border-2 border-blue-200">
+                    <h3 class="font-black text-lg text-blue-950 mb-4">🧠 快問快答：直式名詞連連看</h3>
+                    <p class="text-sm text-gray-600 mb-4">在算式 74 ÷ 5 = 14 … 4 中，各個數字叫什麼名字呢？</p>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-white p-3 rounded-xl border-2 border-blue-100 text-center">
+                            <span class="text-xs text-gray-400 block">74 是</span>
+                            <span class="font-black text-blue-900 text-xl">被除數</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border-2 border-blue-100 text-center">
+                            <span class="text-xs text-gray-400 block">5 是</span>
+                            <span class="font-black text-amber-600 text-xl">除數</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border-2 border-blue-100 text-center">
+                            <span class="text-xs text-gray-400 block">14 是</span>
+                            <span class="font-black text-green-600 text-xl">商（商數）</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border-2 border-blue-100 text-center">
+                            <span class="text-xs text-gray-400 block">4 是</span>
+                            <span class="font-black text-red-600 text-xl">餘數</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: GAME (超市分裝打包大作戰) -->
+        <section id="sec-game" class="tab-content hidden">
+            <div class="bg-white rounded-[32px] p-6 shadow-xl border-4 border-pink-200">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                    <h2 class="text-2xl md:text-3xl font-black text-pink-900 flex items-center gap-2">
+                        🍓 超市打包大作戰！(有餘數的除法)
+                    </h2>
+                    <span class="bg-pink-100 text-pink-700 font-bold text-sm py-1 px-4 rounded-full mt-2 md:mt-0 shadow-sm border border-pink-200">
+                        ⭐ 積分：<span id="game-score">0</span> 分
+                    </span>
+                </div>
+                <p class="text-gray-600 mb-6 text-sm md:text-base">
+                    你是超市的實習店員！請幫客人把散裝的水果與冬甩「平分裝盒」。請按下<b>「裝入一個盒子」</b>按鈕，親自看一看剩餘的數量！
+                </p>
+
+                <!-- Game Screen -->
+                <div class="bg-pink-50 p-6 rounded-2xl border-2 border-pink-200 grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <!-- Game Control & Questions -->
+                    <div class="md:col-span-5 flex flex-col justify-between space-y-4">
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-pink-100">
+                            <h3 class="font-black text-lg text-pink-950 mb-2">📦 顧客打包要求</h3>
+                            <p id="game-customer-text" class="text-base text-gray-700 font-medium leading-relaxed">
+                                我們有 <span class="text-pink-600 font-black text-xl">14</span> 個草莓。每 <span class="text-pink-600 font-black text-xl">3</span> 個裝成一盒。
+                            </p>
+                        </div>
+
+                        <!-- Manual actions to visualize -->
+                        <div class="bg-pink-100 p-4 rounded-xl text-center space-y-3">
+                            <span class="text-xs font-black text-pink-800 block">👇 動手點點看，進行平分打包！</span>
+                            <div class="flex gap-2 justify-center">
+                                <button onclick="packOneBox()" class="bg-pink-500 hover:bg-pink-600 text-white font-black py-2.5 px-4 rounded-xl text-sm shadow flex-1">
+                                    📦 裝入一個盒子 (扣除每盒數)
+                                </button>
+                                <button onclick="resetGameItems()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-3 rounded-xl text-sm shadow">
+                                    🔄 重設
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Form Answers -->
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-pink-100 space-y-3">
+                            <span class="text-xs font-black text-gray-400 block">請輸入你的答案：</span>
+                            <div class="flex flex-col gap-2">
+                                <div class="flex items-center gap-2 font-bold text-gray-800">
+                                    <span>可以裝滿：</span>
+                                    <input type="number" id="game-input-boxes" class="math-input w-16 h-10 text-pink-600" placeholder="?">
+                                    <span>盒</span>
+                                </div>
+                                <div class="flex items-center gap-2 font-bold text-gray-800">
+                                    <span>剩下：</span>
+                                    <input type="number" id="game-input-leftover" class="math-input w-16 h-10 text-red-600" placeholder="?">
+                                    <span>個</span>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <button onclick="submitGameAnswer()" class="bubble-btn-orange w-full bg-pink-500 hover:bg-pink-600 text-white font-black py-3 rounded-xl shadow-md">
+                                    🎯 提交打包結果！
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Area (Strawberries & Boxes) -->
+                    <div class="md:col-span-7 bg-white p-6 rounded-2xl border-2 border-pink-100 shadow-sm flex flex-col justify-between min-h-[350px]">
+                        
+                        <!-- Left-to-pack Shelf -->
+                        <div>
+                            <span class="text-xs font-black text-gray-400 block mb-2">🍎 散裝貨架 (還剩下：<span id="game-visual-left-cnt" class="text-pink-600 font-bold">14</span> 個)</span>
+                            <div id="game-items-shelf" class="flex flex-wrap gap-2 p-3 bg-pink-50 rounded-xl min-h-[100px] border border-dashed border-pink-200">
+                                <!-- Emojis go here -->
+                            </div>
+                        </div>
+
+                        <!-- Packed Boxes Shelf -->
+                        <div class="mt-6">
+                            <span class="text-xs font-black text-gray-400 block mb-2">📦 已包裝完成的盒子 (<span id="game-visual-box-cnt" class="text-green-600 font-bold">0</span> 盒)</span>
+                            <div id="game-boxes-area" class="grid grid-cols-2 sm:grid-cols-3 gap-2 min-h-[100px]">
+                                <!-- Box divs go here -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: QUIZ (小學堂除法綜合練習) -->
+        <section id="sec-quiz" class="tab-content hidden">
+            <div class="bg-white rounded-[32px] p-6 shadow-xl border-4 border-emerald-200">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                    <h2 class="text-2xl md:text-3xl font-black text-emerald-950 flex items-center gap-2">
+                        📝 除法綜合應用小學堂
+                    </h2>
+                    <span class="text-sm font-bold text-emerald-800 bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-200">
+                        答對數：<span id="quiz-correct-cnt" class="text-emerald-600">0</span> / 6
+                    </span>
+                </div>
+                <p class="text-gray-600 mb-6 text-sm md:text-base">
+                    這裡有 6 題為你精心準備的高階常規與應用題目，涵蓋<b>基本除法、直式概念、兩位數除法以及生活應用題</b>。試試看你能答對多少題！
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Q1 -->
+                    <div class="bg-emerald-50 p-5 rounded-2xl border-2 border-emerald-100 flex flex-col justify-between">
+                        <div>
+                            <span class="bg-emerald-200 text-emerald-800 text-xs font-black px-2.5 py-1 rounded-full">第 1 題：口算</span>
+                            <p class="font-black text-lg text-emerald-950 mt-2 leading-relaxed">
+                                算算看：96 ÷ 4 ÷ 3 = ？
+                            </p>
+                        </div>
+                        <div class="mt-4">
+                            <input type="number" id="quiz-ans-1" class="math-input w-24 h-11" placeholder="答案">
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="bg-emerald-50 p-5 rounded-2xl border-2 border-emerald-100 flex flex-col justify-between">
+                        <div>
+                            <span class="bg-emerald-200 text-emerald-800 text-xs font-black px-2.5 py-1 rounded-full">第 2 題：有餘數除法</span>
+                            <p class="font-black text-lg text-emerald-950 mt-2 leading-relaxed">
+                                83 ÷ 4 = <span class="text-emerald-700 font-black">A</span> … <span class="text-red-600 font-black">B</span>，則商數 A 是多少？
+                            </p>
+                        </div>
+                        <div class="mt-4">
+                            <input type="number" id="quiz-ans-2" class="math-input w-24 h-11" placeholder="商 A">
+                        </div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="bg-emerald-50 p-5 rounded-2xl border-2 border-emerald-100 flex flex-col justify-between">
+                        <div>
+                            <span class="bg-emerald-200 text-emerald-800 text-xs font-black px-2.5 py-1 rounded-full">第 3 題：直式餘數判定</span>
+                            <p class="font-black text-lg text-emerald-950 mt-2 leading-relaxed">
+                                在 83 ÷ 4 的除法算式中，餘數 B 是多少？
+                            </p>
+                        </div>
+                        <div class="mt-4">
+                            <input type="number" id="quiz-ans-3" class="math-input w-24 h-11" placeholder="餘數 B">
+                        </div>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="bg-emerald-50 p-5 rounded-2xl border-2 border-emerald-100 flex flex-col justify-between">
+                        <div>
+                            <span class="bg-emerald-200 text-emerald-800 text-xs font-black px-2.5 py-1 rounded-full">第 4 題：應用文字題 (茶樓包子)</span>
+                            <p class="font-black text-gray-700 mt-2 text-sm leading-relaxed">
+                                茶樓的菜苗餃每籠有 3 隻。廚師做了菜苗餃 80 隻。
+                            </p>
+                            <p class="font-black text-lg text-emerald-950 mt-1 leading-relaxed">
+                                最多可放滿多少籠？
+                            </p>
+                        </div>
+                        <div class="mt-4">
+                            <input type="number" id="quiz-ans-4" class="math-input w-24 h-11" placeholder="籠數">
+                        </div>
+                    </div>
+
+                    <!-- Q5 -->
+                    <div class="bg-emerald-50 p-5 rounded-2xl border-2 border-emerald-100 flex flex-col justify-between">
+                        <div>
+                            <span class="bg-emerald-200 text-emerald-800 text-xs font-black px-2.5 py-1 rounded-full">第 5 題：應用文字題 (續上題)</span>
+                            <p class="font-black text-lg text-emerald-950 mt-2 leading-relaxed">
+                                還餘下菜苗餃多少隻？
+                            </p>
+                        </div>
+                        <div class="mt-4">
+                            <input type="number" id="quiz-ans-5" class="math-input w-24 h-11" placeholder="隻數">
+                        </div>
+                    </div>
+
+                    <!-- Q6 -->
+                    <div class="bg-emerald-50 p-5 rounded-2xl border-2 border-emerald-100 flex flex-col justify-between">
+                        <div>
+                            <span class="bg-emerald-200 text-emerald-800 text-xs font-black px-2.5 py-1 rounded-full">第 6 題：高階思考題 (紙盒運送)</span>
+                            <p class="font-black text-gray-700 mt-2 text-sm leading-relaxed">
+                                每個紙盒可放碟子 8 隻。陶藝家製作了碟子 90 隻。
+                            </p>
+                            <p class="font-black text-lg text-emerald-950 mt-1 leading-relaxed">
+                                他要把這些碟子<b>全部</b>放進紙盒裏運送，最少要用紙盒多少個？
+                            </p>
+                            <p class="text-xs text-amber-600 font-bold mt-1">💡 小貼士：最後剩下來裝不滿一盒的碟子，也要放進一個紙盒運送喔！</p>
+                        </div>
+                        <div class="mt-4">
+                            <input type="number" id="quiz-ans-6" class="math-input w-24 h-11" placeholder="盒數">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feedback and Submit buttons -->
+                <div class="mt-8 flex flex-col md:flex-row md:items-center justify-between gap-4 border-t-2 border-emerald-100 pt-6">
+                    <button onclick="checkAllQuizAnswers()" class="bubble-btn-green bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xl py-3.5 px-8 rounded-2xl shadow-md transition-transform hover:scale-105">
+                        🔍 提交並檢查答案
+                    </button>
+                    <span id="quiz-global-feedback" class="text-lg font-black"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: REPORT (學習成績單與 WhatsApp 發送) -->
+        <section id="sec-report" class="tab-content hidden">
+            <div class="bg-white rounded-[32px] p-6 shadow-xl border-4 border-amber-300">
+                <h2 class="text-2xl md:text-3xl font-black text-amber-950 mb-4 flex items-center gap-2">
+                    📊 除法冒險學習成績單
+                </h2>
+                <p class="text-gray-600 mb-6 text-sm md:text-base">
+                    恭喜你完成了除法超市的學習！在這裡你可以看到自己的進度，還能一鍵將好成績發送給爸爸媽媽看喔！
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <!-- Progress charts/bars -->
+                    <div class="md:col-span-7 bg-amber-50 p-6 rounded-2xl border-2 border-amber-200 space-y-4">
+                        <h3 class="font-black text-xl text-amber-900 mb-2">⭐ 冒險成果清單</h3>
+                        
+                        <!-- Video Checklist -->
+                        <div class="flex items-center justify-between bg-white p-3.5 rounded-xl border border-amber-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">📺</span>
+                                <span class="font-bold">看電視影片學除法：</span>
+                            </div>
+                            <span id="chk-video-status" class="bg-red-100 text-red-600 text-xs font-black py-1 px-3.5 rounded-full">未完成</span>
+                        </div>
+
+                        <!-- Relation Checklist -->
+                        <div class="flex items-center justify-between bg-white p-3.5 rounded-xl border border-amber-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">⚖️</span>
+                                <span class="font-bold">乘與除一家親小挑戰：</span>
+                            </div>
+                            <span id="chk-relation-status" class="bg-red-100 text-red-600 text-xs font-black py-1 px-3.5 rounded-full">未完成</span>
+                        </div>
+
+                        <!-- Long Division Checklist -->
+                        <div class="flex items-center justify-between bg-white p-3.5 rounded-xl border border-amber-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">📐</span>
+                                <span class="font-bold">除法直式步驟理解：</span>
+                            </div>
+                            <span id="chk-vertical-status" class="bg-red-100 text-red-600 text-xs font-black py-1 px-3.5 rounded-full">未完成</span>
+                        </div>
+
+                        <!-- Pack Game Checklist -->
+                        <div class="flex items-center justify-between bg-white p-3.5 rounded-xl border border-amber-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">🍓</span>
+                                <span class="font-bold">超市打包打包總分：</span>
+                            </div>
+                            <span id="chk-game-status" class="font-black text-amber-900">0 分 (玩一玩獲取積分)</span>
+                        </div>
+
+                        <!-- Class practice Checklist -->
+                        <div class="flex items-center justify-between bg-white p-3.5 rounded-xl border border-amber-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">📝</span>
+                                <span class="font-bold">綜合小學堂答對題數：</span>
+                            </div>
+                            <span id="chk-quiz-status" class="font-black text-emerald-600">0 / 6 題</span>
+                        </div>
+                    </div>
+
+                    <!-- Right: Share via WhatsApp card -->
+                    <div class="md:col-span-5 bg-white p-6 rounded-2xl border-2 border-amber-200 shadow-sm flex flex-col justify-between space-y-6">
+                        <div class="text-center">
+                            <span class="text-4xl">📱</span>
+                            <h3 class="font-black text-xl text-amber-950 mt-2">快跟父母分享進度！</h3>
+                            <p class="text-xs text-gray-500 mt-1">完成任務後，發送學習簡報給爸爸媽媽，讓他們為你感到高興吧！</p>
+                        </div>
+
+                        <!-- Form for parents WhatsApp number -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-black text-gray-400 block">家長的手機號碼 (選填，直接開啟對話)：</label>
+                            <input type="text" id="parent-phone" class="math-input w-full h-11 text-base text-left px-3" placeholder="例如: 91234567">
+                        </div>
+
+                        <button onclick="sendParentWhatsApp()" class="bubble-btn-green w-full bg-green-500 hover:bg-green-600 text-white font-black py-3.5 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-base">
+                            💬 WhatsApp 告訴爸爸媽媽！
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER LICENSE -->
+    <footer class="max-w-4xl mx-auto mt-12 text-center text-xs text-gray-400 font-medium">
+        i-Math 數學概念高階訓練 3上 參考教材設計 | © 教育網絡有限公司
+    </footer>
+
+    <!-- INTERACTIVE SCRIPTS -->
+    <script>
+        // Web Audio API simple Sound Effects Synthesizer (No external asset dependency)
+        let audioCtx;
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            return audioCtx;
+        }
+
+        // Sound 1: Ding (Success/Correct)
+        function playDing() {
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, now); // C5
+                osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.8);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.8);
+            } catch (e) {
+                console.log("Audio not allowed yet or error: " + e);
+            }
+        }
+
+        // Sound 2: Buzz (Wrong/Try again)
+        function playBuzz() {
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.linearRampToValueAtTime(100, now + 0.3);
+
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.4);
+            } catch (e) {
+                console.log("Audio not allowed yet");
+            }
+        }
+
+        // Sound 3: Bubble / Packing Pop
+        function playPop() {
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(1200, now + 0.15);
+
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.15);
+            } catch (e) {
+                console.log("Audio not allowed yet");
+            }
+        }
+
+        // STATE & PROGRESS MANAGEMENT
+        let state = {
+            progress: {
+                videoDone: false,
+                relationDone: false,
+                verticalDone: false,
+                gameHighScore: 0,
+                quizScore: 0,
+                quizCompleted: false
+            },
+            relationGrid: {
+                rows: 3,
+                cols: 4
+            },
+            verticalStep: 1,
+            game: {
+                totalItems: 14,
+                boxSize: 3,
+                packedBoxes: 0,
+                leftoverItems: 14,
+                itemEmoji: '🍓',
+                correctBoxes: 4,
+                correctLeftover: 2
+            }
+        };
+
+        // Load progress if exists
+        window.onload = function() {
+            const savedState = localStorage.getItem('div_supermarket_progress');
+            if (savedState) {
+                try {
+                    state.progress = JSON.parse(savedState);
+                } catch(e) {
+                    console.log("Error loading state", e);
+                }
+            }
+            // Init Views
+            switchTab('class');
+            initRelationGrid();
+            initVerticalStep();
+            initGame();
+            updateReportTab();
+        };
+
+        function saveProgress() {
+            localStorage.setItem('div_supermarket_progress', JSON.stringify(state.progress));
+            updateReportTab();
+        }
+
+        function resetAllProgress() {
+            state.progress = {
+                videoDone: false,
+                relationDone: false,
+                verticalDone: false,
+                gameHighScore: 0,
+                quizScore: 0,
+                quizCompleted: false
+            };
+            saveProgress();
+            // Reset fields
+            document.getElementById('rel-ans-1').value = '';
+            document.getElementById('rel-ans-2').value = '';
+            document.getElementById('quiz-ans-1').value = '';
+            document.getElementById('quiz-ans-2').value = '';
+            document.getElementById('quiz-ans-3').value = '';
+            document.getElementById('quiz-ans-4').value = '';
+            document.getElementById('quiz-ans-5').value = '';
+            document.getElementById('quiz-ans-6').value = '';
+            document.getElementById('quiz-global-feedback').innerText = '';
+            document.getElementById('quiz-correct-cnt').innerText = '0';
+            state.verticalStep = 1;
+            initVerticalStep();
+            initGame();
+            playPop();
+            alert("進度已重設！");
+        }
+
+        // Tab Switch logic
+        function switchTab(tabId) {
+            // Hide all
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('block'));
+
+            // Show current
+            document.getElementById('sec-' + tabId).classList.remove('hidden');
+            document.getElementById('sec-' + tabId).classList.add('block');
+
+            // Toggle active style on buttons
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.classList.remove('bg-emerald-600', 'text-white');
+                btn.classList.add('bg-white', 'text-emerald-800');
+            });
+            const activeBtn = document.getElementById('tab-' + tabId);
+            activeBtn.classList.remove('bg-white', 'text-emerald-800');
+            activeBtn.classList.add('bg-emerald-600', 'text-white');
+
+            // Refresh subviews if needed
+            if (tabId === 'report') {
+                updateReportTab();
+            }
+        }
+
+        function markTaskDone(task) {
+            if (task === 'video') {
+                state.progress.videoDone = true;
+            } else if (task === 'relation') {
+                state.progress.relationDone = true;
+            } else if (task === 'vertical') {
+                state.progress.verticalDone = true;
+            }
+            saveProgress();
+        }
+
+
+        // SECTION 2: RELATIONSHIP GRID SYSTEM
+        const RELATION_EMOJIS = ['🍎', '🍊', '🍐', '🍋', '🍑'];
+        function initRelationGrid() {
+            const display = document.getElementById('shelf-display');
+            const cols = state.relationGrid.cols;
+            const rows = state.relationGrid.rows;
+            const total = cols * rows;
+
+            document.getElementById('rel-cols').innerText = cols;
+            document.getElementById('rel-rows').innerText = rows;
+
+            // Update formula card displays with clean text unicode math symbols instead of broken LaTeX
+            document.getElementById('formula-mult').innerText = `${rows} × ${cols} = ${total}`;
+            document.getElementById('formula-div').innerText = `${total} ÷ ${rows} = ${cols}`;
+
+            // Clear display
+            display.innerHTML = '';
+            display.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+
+            // Random cute emoji for this shelf configuration
+            const shelfEmoji = RELATION_EMOJIS[(cols + rows) % RELATION_EMOJIS.length];
+
+            for (let i = 0; i < total; i++) {
+                const item = document.createElement('div');
+                item.className = 'w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-2xl md:text-3xl bg-amber-100 rounded-full shadow-inner animate-pulse';
+                item.innerText = shelfEmoji;
+                display.appendChild(item);
+            }
+        }
+
+        function changeRelationGrid(dCol, dRow) {
+            let newCols = state.relationGrid.cols + dCol;
+            let newRows = state.relationGrid.rows + dRow;
+
+            // Constraints: min 2x2, max 8x8
+            if (newCols >= 2 && newCols <= 8) state.relationGrid.cols = newCols;
+            if (newRows >= 2 && newRows <= 8) state.relationGrid.rows = newRows;
+
+            playPop();
+            initRelationGrid();
+        }
+
+        function checkRelationAnswers() {
+            const ans1 = parseInt(document.getElementById('rel-ans-1').value);
+            const ans2 = parseInt(document.getElementById('rel-ans-2').value);
+            const feedback = document.getElementById('rel-feedback');
+
+            if (ans1 === 7 && ans2 === 9) {
+                feedback.innerText = '🎉 太棒了！全部答對！';
+                feedback.className = 'text-green-600 font-black ml-4';
+                playDing();
+                markTaskDone('relation');
+            } else {
+                feedback.innerText = '❌ 再想一想看？配合乘除關係找數字哦！';
+                feedback.className = 'text-red-500 font-black ml-4';
+                playBuzz();
+            }
+        }
+
+
+        // SECTION 3: VERTICAL MAGIC STEPS
+        const verticalStepsInfo = [
+            {
+                stepNum: 1,
+                instruction: "<b>第一步：看十位的分法！</b><br>十位上的 7 代表有 70 個橙（7個十）。<br>我們先分這 7 個十：7 除以 5，商數是 <b>1</b>（寫在最上面十位上）。<br>把分出去的 5 寫在下面 (1 × 5 = 5)，做減法：7 - 5 = 2。<br>這說明還剩下 2 個十份沒分。",
+                highlight: ['v-q-tens', 'v-sub1-tens', 'v-divisor', 'v-d-tens', 'v-rem1-tens']
+            },
+            {
+                stepNum: 2,
+                instruction: "<b>第二步：把個位「放下來」！</b><br>十位剩下的 2 代表 20。我們把個位的 <b>4</b> 放下來，和 2 拼在一起。<br>現在，我們一共有 <b>24</b> 個橙需要繼續平分！",
+                highlight: ['v-d-ones', 'v-bring-ones', 'v-rem1-tens']
+            },
+            {
+                stepNum: 3,
+                instruction: "<b>第三步：分出個位！</b><br>我們把這 24 個橙，每 5 個裝一袋。<br>在個位上商 <b>4</b>（寫在最上面個位上）。<br>分出去的橙是 4 × 5 = 20（寫在下面）。<br>再一次做減法：24 - 20 = 4。",
+                highlight: ['v-q-ones', 'v-sub2-tens', 'v-sub2-ones']
+            },
+            {
+                stepNum: 4,
+                instruction: "<b>第四步：寫下最後答案！</b><br>剩下的 <b>4</b> 比除數 5 還要小，不能再分袋了，它就是<b>「餘數」</b>。<br>所以，74 ÷ 5 的答案是：<b>商 14，餘數 4</b>。<br>意思是：可裝滿 14 袋，還剩下 4 個橙！",
+                highlight: ['v-final-rem']
+            }
+        ];
+
+        function initVerticalStep() {
+            const currentStepData = verticalStepsInfo[state.verticalStep - 1];
+            document.getElementById('v-step-num').innerText = state.verticalStep;
+            document.getElementById('vertical-step-text').innerHTML = currentStepData.instruction;
+
+            // Reset all elements colors
+            const allElements = ['v-q-tens', 'v-q-ones', 'v-sub1-tens', 'v-rem1-tens', 'v-bring-ones', 'v-sub2-tens', 'v-sub2-ones', 'v-final-rem'];
+            allElements.forEach(id => {
+                const el = document.getElementById(id);
+                el.className = el.className.replace('text-blue-600', 'text-gray-300').replace('text-red-500', 'text-gray-300').replace('text-green-500', 'text-gray-300');
+            });
+
+            // Highlight elements of current step with corresponding color classes
+            currentStepData.highlight.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                // Assign bright colors based on type
+                if (id.includes('q')) {
+                    el.classList.add('text-green-500'); // Green for quotients
+                } else if (id.includes('rem') || id.includes('rem') || id.includes('final')) {
+                    el.classList.add('text-red-500'); // Red for remainders
+                } else {
+                    el.classList.add('text-blue-600'); // Blue for active step workings
+                }
+                el.classList.remove('text-gray-300');
+            });
+
+            // Disable buttons if at boundaries
+            document.getElementById('btn-v-prev').disabled = state.verticalStep === 1;
+            document.getElementById('btn-v-prev').style.opacity = state.verticalStep === 1 ? '0.5' : '1';
+            
+            if (state.verticalStep === 4) {
+                document.getElementById('btn-v-next').innerText = "🏆 明白了！學會直式！";
+                document.getElementById('btn-v-next').className = "bubble-btn-green bg-green-500 hover:bg-green-600 text-white font-black py-2.5 px-6 rounded-xl text-sm shadow flex-1";
+            } else {
+                document.getElementById('btn-v-next').innerText = "下一步 ▶";
+                document.getElementById('btn-v-next').className = "bg-blue-600 hover:bg-blue-700 text-white font-black py-2.5 px-6 rounded-xl text-sm shadow flex-1";
+            }
+        }
+
+        function changeVerticalStep(dir) {
+            if (dir === 1 && state.verticalStep === 4) {
+                // Done with step tutorial
+                markTaskDone('vertical');
+                switchTab('game');
+                return;
+            }
+
+            let newStep = state.verticalStep + dir;
+            if (newStep >= 1 && newStep <= 4) {
+                state.verticalStep = newStep;
+                playPop();
+                initVerticalStep();
+            }
+        }
+
+
+        // SECTION 4: PACKING MINI-GAME
+        const GAME_LEVELS = [
+            { total: 14, box: 3, emoji: '🍓', text: '我們有 <span class="text-pink-600 font-black text-xl">14</span> 個散裝草莓。每 <span class="text-pink-600 font-black text-xl">3</span> 個裝成一盒。' },
+            { total: 22, box: 5, emoji: '🍩', text: '我們有 <span class="text-pink-600 font-black text-xl">22</span> 個香甜冬甩。每 <span class="text-pink-600 font-black text-xl">5</span> 個裝成一盒。' },
+            { total: 19, box: 4, emoji: '🍋', text: '我們有 <span class="text-pink-600 font-black text-xl">19</span> 個酸甜檸檬。每 <span class="text-pink-600 font-black text-xl">4</span> 個裝成一盒。' },
+            { total: 31, box: 6, emoji: '🧁', text: '我們有 <span class="text-pink-600 font-black text-xl">31</span> 個杯子蛋糕。每 <span class="text-pink-600 font-black text-xl">6</span> 個裝成一盒。' },
+            { total: 25, box: 8, emoji: '🍎', text: '我們有 <span class="text-pink-600 font-black text-xl">25</span> 個新鮮紅蘋果。每 <span class="text-pink-600 font-black text-xl">8</span> 個裝成一盒。' }
+        ];
+        let currentGameLevel = 0;
+
+        function initGame() {
+            const levelData = GAME_LEVELS[currentGameLevel];
+            state.game = {
+                totalItems: levelData.total,
+                boxSize: levelData.box,
+                packedBoxes: 0,
+                leftoverItems: levelData.total,
+                itemEmoji: levelData.emoji,
+                correctBoxes: Math.floor(levelData.total / levelData.box),
+                correctLeftover: levelData.total % levelData.box
+            };
+
+            // Update text displays
+            document.getElementById('game-customer-text').innerHTML = levelData.text;
+            document.getElementById('game-input-boxes').value = '';
+            document.getElementById('game-input-leftover').value = '';
+
+            renderGameItems();
+        }
+
+        function renderGameItems() {
+            // Render remaining on shelf
+            const shelf = document.getElementById('game-items-shelf');
+            shelf.innerHTML = '';
+            document.getElementById('game-visual-left-cnt').innerText = state.game.leftoverItems;
+
+            for (let i = 0; i < state.game.leftoverItems; i++) {
+                const item = document.createElement('span');
+                item.className = 'text-3xl inline-block transform hover:scale-125 transition-transform cursor-pointer animate-bounce';
+                item.innerText = state.game.itemEmoji;
+                shelf.appendChild(item);
+            }
+
+            // Render packed boxes
+            const boxesArea = document.getElementById('game-boxes-area');
+            boxesArea.innerHTML = '';
+            document.getElementById('game-visual-box-cnt').innerText = state.game.packedBoxes;
+
+            for (let b = 0; b < state.game.packedBoxes; b++) {
+                const boxDiv = document.createElement('div');
+                boxDiv.className = 'bg-yellow-50 border-2 border-yellow-400 p-2 rounded-xl flex flex-col items-center justify-center shadow-inner relative';
+                
+                // Show items inside box
+                const itemsInBox = document.createElement('div');
+                itemsInBox.className = 'flex flex-wrap gap-1 justify-center';
+                for (let j = 0; j < state.game.boxSize; j++) {
+                    const icon = document.createElement('span');
+                    icon.className = 'text-xl';
+                    icon.innerText = state.game.itemEmoji;
+                    itemsInBox.appendChild(icon);
+                }
+
+                const label = document.createElement('span');
+                label.className = 'bg-yellow-200 text-yellow-800 text-[10px] font-black px-2 py-0.5 rounded-full mt-1.5';
+                label.innerText = `第 ${b+1} 盒 (${state.game.boxSize}個)`;
+
+                boxDiv.appendChild(itemsInBox);
+                boxDiv.appendChild(label);
+                boxesArea.appendChild(boxDiv);
+            }
+        }
+
+        function packOneBox() {
+            const size = state.game.boxSize;
+            if (state.game.leftoverItems >= size) {
+                state.game.leftoverItems -= size;
+                state.game.packedBoxes += 1;
+                playPop();
+                renderGameItems();
+            } else {
+                alert("散裝貨架上的物品不夠裝滿一個箱子囉！");
+            }
+        }
+
+        function resetGameItems() {
+            initGame();
+            playPop();
+        }
+
+        function submitGameAnswer() {
+            const userBoxes = parseInt(document.getElementById('game-input-boxes').value);
+            const userLeftover = parseInt(document.getElementById('game-input-leftover').value);
+
+            if (isNaN(userBoxes) || isNaN(userLeftover)) {
+                alert("請在輸入框中填寫答案哦！");
+                return;
+            }
+
+            if (userBoxes === state.game.correctBoxes && userLeftover === state.game.correctLeftover) {
+                playDing();
+                
+                // Add Score
+                let score = parseInt(document.getElementById('game-score').innerText) + 10;
+                document.getElementById('game-score').innerText = score;
+                if (score > state.progress.gameHighScore) {
+                    state.progress.gameHighScore = score;
+                    saveProgress();
+                }
+
+                // Level up
+                alert(`🎉 非常正確！恭喜你！\n獲得 10 分！進入下一個分裝任務！`);
+                currentGameLevel = (currentGameLevel + 1) % GAME_LEVELS.length;
+                initGame();
+            } else {
+                playBuzz();
+                alert(`❌ 哎呀，數量好像不太對喔！\n小建議：點擊「裝入一個盒子」動手分平，看最後剩下多少個！`);
+            }
+        }
+
+
+        // SECTION 5: COMPREHENSIVE QUIZ
+        const QUIZ_CORRECT_ANSWERS = {
+            ans1: 8,   // 96 / 4 = 24, 24 / 3 = 8
+            ans2: 20,  // 83 / 4 = 20 remainder 3, Quotient is 20
+            ans3: 3,   // Remainder is 3
+            ans4: 26,  // 80 / 3 = 26 remainder 2
+            ans5: 2,   // Remainder is 2
+            ans6: 12   // 90 / 8 = 11 remainder 2 -> requires 12 boxes (High cognitive)
+        };
+
+        function checkAllQuizAnswers() {
+            let correctCount = 0;
+
+            // Check each answer
+            for (let i = 1; i <= 6; i++) {
+                const userAns = parseInt(document.getElementById(`quiz-ans-${i}`).value);
+                const correctAns = QUIZ_CORRECT_ANSWERS[`ans${i}`];
+                const inputEl = document.getElementById(`quiz-ans-${i}`);
+
+                if (userAns === correctAns) {
+                    correctCount++;
+                    inputEl.style.borderColor = "#22c55e"; // green
+                    inputEl.style.backgroundColor = "#f0fdf4";
+                } else {
+                    inputEl.style.borderColor = "#ef4444"; // red
+                    inputEl.style.backgroundColor = "#fef2f2";
+                }
+            }
+
+            document.getElementById('quiz-correct-cnt').innerText = correctCount;
+            state.progress.quizScore = correctCount;
+            state.progress.quizCompleted = true;
+            saveProgress();
+
+            const globalFeedback = document.getElementById('quiz-global-feedback');
+            if (correctCount === 6) {
+                playDing();
+                globalFeedback.innerText = "🏆 太震撼了！你得到了滿分 6/6！是個除法小天才！";
+                globalFeedback.className = "text-green-600 font-black text-xl";
+            } else {
+                playBuzz();
+                globalFeedback.innerText = `👍 不錯喔！你答對了 ${correctCount} 題！紅色框框的題目需要再想想看！`;
+                globalFeedback.className = "text-amber-600 font-black text-lg";
+            }
+        }
+
+
+        // SECTION 6: WHATSAPP SHARING & PROGRESS REPORT
+        function updateReportTab() {
+            // Update Checklist statuses
+            const videoStatus = document.getElementById('chk-video-status');
+            if (state.progress.videoDone) {
+                videoStatus.innerText = "✅ 已完成";
+                videoStatus.className = "bg-green-100 text-green-600 text-xs font-black py-1 px-3.5 rounded-full";
+            } else {
+                videoStatus.innerText = "❌ 未完成";
+                videoStatus.className = "bg-red-100 text-red-600 text-xs font-black py-1 px-3.5 rounded-full";
+            }
+
+            const relationStatus = document.getElementById('chk-relation-status');
+            if (state.progress.relationDone) {
+                relationStatus.innerText = "✅ 已完成";
+                relationStatus.className = "bg-green-100 text-green-600 text-xs font-black py-1 px-3.5 rounded-full";
+            } else {
+                relationStatus.innerText = "❌ 未完成";
+                relationStatus.className = "bg-red-100 text-red-600 text-xs font-black py-1 px-3.5 rounded-full";
+            }
+
+            const verticalStatus = document.getElementById('chk-vertical-status');
+            if (state.progress.verticalDone) {
+                verticalStatus.innerText = "✅ 已完成";
+                verticalStatus.className = "bg-green-100 text-green-600 text-xs font-black py-1 px-3.5 rounded-full";
+            } else {
+                verticalStatus.innerText = "❌ 未完成";
+                verticalStatus.className = "bg-red-100 text-red-600 text-xs font-black py-1 px-3.5 rounded-full";
+            }
+
+            document.getElementById('chk-game-status').innerText = `${state.progress.gameHighScore} 分`;
+            document.getElementById('chk-game-status').className = "font-black text-pink-600";
+
+            document.getElementById('chk-quiz-status').innerText = `${state.progress.quizScore} / 6 題`;
+            document.getElementById('chk-quiz-status').className = state.progress.quizScore === 6 ? "font-black text-green-600" : "font-black text-amber-600";
+        }
+
+        function sendParentWhatsApp() {
+            let parentNo = document.getElementById('parent-phone').value.trim();
+            
+            // Format report message
+            let msg = `🌟【神奇超市除法大冒險 - 學習喜訊】🌟\n\n`;
+            msg += `爸爸媽媽，我今天完成了除法學習關卡喔！這是我的成績單：\n\n`;
+            msg += `📺 觀看除法教學影片：${state.progress.videoDone ? "✅ 已認真看完" : "⚠️ 還沒看完"}\n`;
+            msg += `⚖️ 理解乘除互逆關係：${state.progress.relationDone ? "✅ 已通過挑戰" : "⚠️ 需要練習"}\n`;
+            msg += `📐 直式除法步驟掌握：${state.progress.verticalDone ? "✅ 已全部掌握" : "⚠️ 還在看步驟"}\n`;
+            msg += `🍓 超市打包遊戲最高分：🔥 ${state.progress.gameHighScore} 分\n`;
+            msg += `📝 除法小學堂測試答對：🌟 ${state.progress.quizScore} / 6 題\n\n`;
+            
+            if (state.progress.quizScore === 6) {
+                msg += `🏆 我現在很懂除法直式和有餘數的除法啦！誇獎我一下吧！❤️`;
+            } else {
+                msg += `💪 我會繼續加油，努力拿到滿分！`;
+            }
+
+            // Encode URI
+            let url = "https://api.whatsapp.com/send?";
+            if (parentNo) {
+                // Ensure correct format if simple prefix is omitted
+                if (!parentNo.startsWith('+') && !parentNo.startsWith('852') && parentNo.length === 8) {
+                    parentNo = '852' + parentNo;
+                }
+                url += `phone=${parentNo}&`;
+            }
+            url += `text=${encodeURIComponent(msg)}`;
+
+            // Open in new tab
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
