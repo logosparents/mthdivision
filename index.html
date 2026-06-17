@@ -76,7 +76,7 @@
         <div class="max-w-4xl mx-auto flex flex-col items-center">
             <!-- Supermarket Icon / Badge -->
             <div class="bg-yellow-300 text-green-900 font-black text-sm px-4 py-1.5 rounded-full uppercase tracking-wider mb-2 animate-bounce shadow">
-                🛒 歡迎來到除法超級市場！
+                🛒 歡迎來到智慧超級市場！
             </div>
             <h1 class="text-3xl md:text-5xl font-black tracking-tight drop-shadow-[0_3px_3px_rgba(0,0,0,0.3)] flex items-center gap-2">
                 🍎 神奇超市除法大冒險 🍩
@@ -565,6 +565,8 @@
                                     🎯 提交打包結果！
                                 </button>
                             </div>
+                            <!-- Inline feedback placeholder -->
+                            <div id="game-feedback-inline" class="hidden text-sm p-3.5 rounded-2xl font-bold mt-2 text-center transition-all border"></div>
                         </div>
                     </div>
 
@@ -1243,7 +1245,31 @@
             document.getElementById('game-input-boxes').value = '';
             document.getElementById('game-input-leftover').value = '';
 
+            // Clear feedback box on new level
+            const fb = document.getElementById('game-feedback-inline');
+            if (fb) {
+                fb.classList.add('hidden');
+                fb.innerHTML = '';
+            }
+
             renderGameItems();
+        }
+
+        // Helper function to show game feedback directly on page instead of alert()
+        function showGameFeedback(text, type) {
+            const fb = document.getElementById('game-feedback-inline');
+            if (!fb) return;
+            fb.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'border-green-300', 'bg-red-100', 'text-red-800', 'border-red-300', 'bg-amber-100', 'text-amber-800', 'border-amber-300');
+            fb.classList.add('block'); // Make visible
+
+            if (type === 'success') {
+                fb.classList.add('bg-green-100', 'text-green-800', 'border-green-300');
+            } else if (type === 'error') {
+                fb.classList.add('bg-red-100', 'text-red-800', 'border-red-300');
+            } else {
+                fb.classList.add('bg-amber-100', 'text-amber-800', 'border-amber-300');
+            }
+            fb.innerHTML = text;
         }
 
         function renderGameItems() {
@@ -1295,8 +1321,9 @@
                 state.game.packedBoxes += 1;
                 playPop();
                 renderGameItems();
+                showGameFeedback(`📦 已成功將 ${size} 個裝入第 ${state.game.packedBoxes} 盒！`, 'success');
             } else {
-                alert("散裝貨架上的物品不夠裝滿一個箱子囉！");
+                showGameFeedback("⚠️ 散裝貨架上的物品不夠裝滿一個盒子囉！", 'warning');
             }
         }
 
@@ -1310,7 +1337,7 @@
             const userLeftover = parseInt(document.getElementById('game-input-leftover').value);
 
             if (isNaN(userBoxes) || isNaN(userLeftover)) {
-                alert("請在輸入框中填寫答案哦！");
+                showGameFeedback("✍️ 請在輸入框中填寫你的答案哦！", 'warning');
                 return;
             }
 
@@ -1325,13 +1352,16 @@
                     saveProgress();
                 }
 
-                // Level up
-                alert(`🎉 非常正確！恭喜你！\n獲得 10 分！進入下一個分裝任務！`);
-                currentGameLevel = (currentGameLevel + 1) % GAME_LEVELS.length;
-                initGame();
+                showGameFeedback(`🎉 <b>非常正確！恭喜你！</b><br>獲得了 10 積分！正在為你開拓下一個分裝任務... 🚀`, 'success');
+
+                // Level up delay so they can see inline feedback
+                setTimeout(() => {
+                    currentGameLevel = (currentGameLevel + 1) % GAME_LEVELS.length;
+                    initGame();
+                }, 2200);
             } else {
                 playBuzz();
-                alert(`❌ 哎呀，數量好像不太對喔！\n小建議：點擊「裝入一個盒子」動手分平，看最後剩下多少個！`);
+                showGameFeedback(`❌ <b>哎呀，數量好像不太對喔！</b><br>💡 小建議：可以點擊「裝入一個盒子」親自動手分平，看最後剩下多少個！`, 'error');
             }
         }
 
